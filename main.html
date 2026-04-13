@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | 3D & Code</title>
+    <link rel="icon" type="image/webp" href="images/Logo.webp">
+    <style>
+        header {
+            padding: 20vh 10vw 10vh;
+            max-width: 800px;
+            position: relative; /* IMPORTANT: This keeps the background image contained within the header area */
+        }
+
+        /* This creates the background logo */
+        header::before {
+            content: "";
+            position: absolute;
+            top: 50%; /* Vertically centers relative to the header */
+            left: 2vw; /* Adjust this to slide it left or right */
+            transform: translateY(-50%); /* Keeps the vertical centering perfectly aligned */
+            
+            width: 450px; /* Adjust how large you want the logo */
+            height: 450px; 
+            
+            /* Put the actual path to your M logo image here */
+            background-image: url('images/Logo.webp'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            
+            opacity: 0.2; /* Drop the transparency so it doesn't overpower the text */
+            z-index: -1; /* Pushes the image strictly behind your text and links */
+            pointer-events: none; /* CRITICAL: Prevents the large image box from blocking clicks on your social links */
+        }
+        :root {
+            --bg-color: #0f0f11;
+            --text-main: #f3f3f3;
+            --text-muted: #888;
+            --accent: #4a90e2;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        /* Social Links */
+        .social-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--text-main);
+        }
+
+        .social-links svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        /* Three.js Canvas container */
+        #webgl-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1; /* Keeps it behind the content */
+            opacity: 0.4; /* Subtle background effect */
+        }
+        header {
+            padding: 20vh 10vw 10vh;
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        .section-title {
+            padding: 0 10vw;
+            margin-top: 5vh;
+            font-size: 2rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        /* CSS Grid for the gallery */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 40px 10vw;
+        }
+        .card {
+            background: #1a1a1d;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card img, .card video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .card-content {
+            padding: 15px;
+        }
+        .card-content h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+        .card-content p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .tags {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: #2a2a2d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="webgl-container"></div>
+
+    <header>
+        <h1>Moksh Verma</h1>
+        <p class="subtitle">Data Science | Technical Art | 3D Environments & Tools</p>
+        
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/moksh-verma-48801027a/" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                LinkedIn
+            </a>
+            
+            <a href="https://www.youtube.com/@digiform80085" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                YouTube
+            </a>
+
+            <a href="https://www.instagram.com/mack.dhunna/" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                Instagram
+            </a>
+            <a href="https://github.com/Xtremerspro" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 19 19"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+                Github
+            </a>
+        </div>
+    </header>
+
+    <h2 class="section-title">Visuals & Rendering</h2>
+
+    <div class="grid-container">
+
+        <div class="card">
+            <img src="images/CanonDSLR.webp" alt="Canon DSLR Camera" loading="lazy">
+            <div class="card-content">
+                <h3>Canon DSLR Camera</h3>
+                <p>A Canon DSLR camera made with real world accuracy and hardsurface techniques, the topology is fully quads and the materials are mostly procedural</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Cycles</span>
+                    <span class="tag">Photoreal</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/FieldRunner.webp" alt="Field Runner" loading="lazy">
+            <div class="card-content">
+                <h3>Field Runner</h3>
+                <p>An liminal space style shot of an environment with a woman running through the wheat, made with photo cutouts and highly dense model scattering</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Cycles</span>
+                    <span class="tag">Environment</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/Josuke.webp" alt="Josuke Higashkata" loading="lazy">
+            <div class="card-content">
+                <h3>Josuke Higashkata</h3>
+                <p>A 3D sculpt of an anime character form JOJOs Bizzare Adventure, every part is sculpted by hand and the hair is built of thousands of hair strands combed to place</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Sculpting</span>
+                    <span class="tag">Anime</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/RedLantern.webp" alt="Red Lantern" loading="lazy">
+            <div class="card-content">
+                <h3>Red Lantern</h3>
+                <p>A recreation of a shot form an old japaneese movie (Raise the Red Lantern). This scene is built by hand and utilized the new (at the time) EEVEE next texture displacement to get the micro-shadows</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">EEVEE</span>
+                    <span class="tag">Cinematic</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/QuestPro.webp" alt="Quest Pro" loading="lazy">
+            <div class="card-content">
+                <h3>Quest Pro</h3>
+                <p>A 3D model of a Meta Quest Pro sitting on a stand, this one was made with hard surface principles in mind and has quad topology with fully procedural textures</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Cycles</span>
+                    <span class="tag">Product</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/Sonos.webp" alt="Sonos Era 300" loading="lazy">
+            <div class="card-content">
+                <h3>Sonos Era 300</h3>
+                <p>a 3D model of a Sonos desktop speaker, this time the environment got as much love as the model itself, making it not look like it's sitting in a void</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Cycles</span>
+                    <span class="tag">Product</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/GoPro.webp" alt="GoPro Hero 10" loading="lazy">
+            <div class="card-content">
+                <h3>GoPro Hero 10</h3>
+                <p>A 3D model of a GoPro hero 10 sitting on the branch of a tiny bush, the model itself started as a 3D scan for the base, and the topology wa built around that</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Cycles</span>
+                    <span class="tag">3D Scan</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <h2 class="section-title">Code & Architecture</h2>
+    <div class="grid-container">
+        
+        <div class="card">
+            <img src="images/MagicWindow.webp" alt="Magic Window" loading="lazy">
+            <div class="card-content">
+                <h3>Magic Window</h3>
+                <p>This is the magic window, it tracks your head with a Kinect v2 and updates the perspective of the screen in real time. It uses a Kinect V2 to track your head and update the virtual camera</p>
+                <div class="tags">
+                    <span class="tag">Unity</span>
+                    <span class="tag">Computer Vision</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <img src="images/Mask.webp" alt="Magic Mask" loading="lazy">
+            <div class="card-content">
+                <h3>Magic Mask</h3>
+                <p>Magic Mask is a desktop GUI application built with Python and Tkinter that utilizes advanced AI to remove backgrounds from images</p>
+                <div class="tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">AI</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/Depth.webp" alt="Depth Anything V2 32bit" loading="lazy">
+            <div class="card-content">
+                <h3>Depth Anything V2 32bit</h3>
+                <p>A fork of the Depth-Anything-V2 Repo, with a helper file + bat script to estimate depth with a 32bit EXR file easily</p>
+                <div class="tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">AI</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+        
+        // Basic boilerplate for a slow-rotating wireframe mesh in the background
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0x333333, wireframe: true });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        
+        scene.add(torusKnot);
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            torusKnot.rotation.x += 0.001;
+            torusKnot.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
