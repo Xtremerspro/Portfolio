@@ -75,13 +75,17 @@
         }
         /* Three.js Canvas container */
         #webgl-container {
-            position: absolute;
+            position: fixed; /* This is the magic word that locks it to the screen */
             top: 0;
             left: 0;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            z-index: -1; /* Keeps it behind the content */
-            opacity: 0.4; /* Subtle background effect */
+            z-index: -2; /* Keeps it behind everything */
+            opacity: 0.2; 
+            pointer-events: none; /* Ensures the invisible canvas doesn't block you from clicking your project cards */
+        }
+        .gitlink {
+            color: rgb(220, 237, 255);
         }
         header {
             padding: 20vh 10vw 10vh;
@@ -149,6 +153,53 @@
             border-radius: 4px;
             font-size: 0.8rem;
             color: var(--accent);
+        }
+        /* Make the portfolio cards indicate they can be clicked */
+        .card img {
+            cursor: zoom-in;
+        }
+
+        /* The dark background overlay */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 10, 12, 0.95); /* Extremely dark, slightly transparent */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensures it sits on top of absolutely everything */
+            
+            /* Animation setup */
+            opacity: 0;
+            pointer-events: none; /* Prevents it from blocking clicks when hidden */
+            transition: opacity 0.3s ease;
+        }
+
+        /* What happens when we activate it via JavaScript */
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+            cursor: zoom-out; /* Changes cursor to a minus magnifying glass to show how to close */
+        }
+
+        /* The expanded image itself */
+        .lightbox img {
+            max-width: 90vw; /* Maximum 90% width of screen */
+            max-height: 90vh; /* Maximum 90% height of screen */
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            
+            /* The pop-in animation */
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        .lightbox.active img {
+            transform: scale(1);
         }
     </style>
 </head>
@@ -277,6 +328,71 @@
             </div>
         </div>
 
+        <div class="card">
+            <img src="images/Gem.webp" alt="Real Gem" loading="lazy">
+            <div class="card-content">
+                <h3>Real Gem</h3>
+                <p>A hyperrealistic gem made after an emerald. The the photo doesn't do it justice because it originated from a video that made the animation look real</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Hyperealistic</span>
+                    <span class="tag">Cinematic</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <img src="images/Godzilla.webp" alt="Godzilla" loading="lazy">
+            <div class="card-content">
+                <h3>Godzilla</h3>
+                <p>A small scene showing 2 Godzillas from different universes fighting. This was made around the re-release of Shin Godzilla, and shows destruction and volumetric effects</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Cinema</span>
+                    <span class="tag">Lighting</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/Silksong.webp" alt="Silksong Lego" loading="lazy">
+            <div class="card-content">
+                <h3>Silksong Lego</h3>
+                <p>A 3D Lego model of Hornet from Silksong. This one uses custom procedural Geometry Nodes to make a base boring model and convert it into legos</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Game Art</span>
+                    <span class="tag">Geometry Nodes</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/Smoke.webp" alt="Smoke" loading="lazy">
+            <div class="card-content">
+                <h3>Smoke</h3>
+                <p>A little cinematic setup of a woman smoking in the void. This one uses volumetrics simulations to get the lighting all correct, and very precise lighting to form the highlights</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Simulation</span>
+                    <span class="tag">Cinematic</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="images/Sony.webp" alt="Sony CyberShot RX100 VIII" loading="lazy">
+            <div class="card-content">
+                <h3>Sony CyberShot RX100 VIII</h3>
+                <p>A Sony point and shoot camera made with accuracy and strays little form the real chassis. The materials and textures are hand crafted to perfection</p>
+                <div class="tags">
+                    <span class="tag">Blender</span>
+                    <span class="tag">Cycles</span>
+                    <span class="tag">Product</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <h2 class="section-title">Code & Architecture</h2>
@@ -285,7 +401,7 @@
         <div class="card">
             <img src="images/MagicWindow.webp" alt="Magic Window" loading="lazy">
             <div class="card-content">
-                <h3>Magic Window</h3>
+                <h3><a class="gitlink" href="https://github.com/Xtremerspro/Magic-Window">Magic Window</a></h3>
                 <p>This is the magic window, it tracks your head with a Kinect v2 and updates the perspective of the screen in real time. It uses a Kinect V2 to track your head and update the virtual camera</p>
                 <div class="tags">
                     <span class="tag">Unity</span>
@@ -297,7 +413,7 @@
         <div class="card">
             <img src="images/Mask.webp" alt="Magic Mask" loading="lazy">
             <div class="card-content">
-                <h3>Magic Mask</h3>
+                <h3><a class="gitlink" href="https://github.com/Xtremerspro/Magic-Mask">Magic Mask</a></h3>
                 <p>Magic Mask is a desktop GUI application built with Python and Tkinter that utilizes advanced AI to remove backgrounds from images</p>
                 <div class="tags">
                     <span class="tag">Python</span>
@@ -307,9 +423,9 @@
         </div>
 
         <div class="card">
-            <img src="images/Depth.webp" alt="Depth Anything V2 32bit" loading="lazy">
+            <img src="images/Depth.webp" alt="Depth Anything V2 32bit EXR" loading="lazy">
             <div class="card-content">
-                <h3>Depth Anything V2 32bit</h3>
+                <h3><a class="gitlink" href="https://github.com/Xtremerspro/Depth-Anything-V2-32bitEXR">Depth Anything V2 32bit EXR</a></h3>
                 <p>A fork of the Depth-Anything-V2 Repo, with a helper file + bat script to estimate depth with a 32bit EXR file easily</p>
                 <div class="tags">
                     <span class="tag">Python</span>
@@ -322,7 +438,11 @@
 
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
-        
+
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) ) + min;
+        }
+                    
         // Basic boilerplate for a slow-rotating wireframe mesh in the background
         const container = document.getElementById('webgl-container');
         const scene = new THREE.Scene();
@@ -332,7 +452,14 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
 
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        var rand = getRndInteger(1, 4);
+        var rand2 = getRndInteger(1, 4);
+
+        if (rand2 == rand) {
+            rand2 = rand2 + 1;
+        }
+
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16, rand, rand2);
         const material = new THREE.MeshBasicMaterial({ color: 0x333333, wireframe: true });
         const torusKnot = new THREE.Mesh(geometry, material);
         
@@ -354,6 +481,30 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        //handle Lightbox
+        document.addEventListener('DOMContentLoaded', () => {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const cardImages = document.querySelectorAll('.card img');
+
+            // Listen for clicks on any project image
+            cardImages.forEach(img => {
+                img.addEventListener('click', () => {
+                    lightboxImg.src = img.src; // Copy the clicked image source
+                    lightbox.classList.add('active'); // Trigger the animation
+                });
+            });
+
+            // Close the lightbox if the user clicks anywhere on the dark overlay
+            lightbox.addEventListener('click', () => {
+                lightbox.classList.remove('active');
+            });
+        });
     </script>
+
+    <div id="lightbox" class="lightbox">
+        <img id="lightbox-img" src="" alt="Expanded View">
+    </div>
 </body>
 </html>
