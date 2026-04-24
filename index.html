@@ -507,23 +507,32 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        //handle Lightbox
         document.addEventListener('DOMContentLoaded', () => {
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightbox-img');
             const cardImages = document.querySelectorAll('.card img');
 
-            // Listen for clicks on any project image
             cardImages.forEach(img => {
                 img.addEventListener('click', () => {
-                    lightboxImg.src = img.src; // Copy the clicked image source
-                    lightbox.classList.add('active'); // Trigger the animation
+                    // 1. Tell the lightbox to wait until the image is fully loaded/painted
+                    lightboxImg.onload = () => {
+                        lightbox.classList.add('active'); // Trigger animation ONLY when ready
+                    };
+                    
+                    // 2. Set the source (which triggers the loading process above)
+                    lightboxImg.src = img.src; 
                 });
             });
 
-            // Close the lightbox if the user clicks anywhere on the dark overlay
+            // Close the lightbox
             lightbox.addEventListener('click', () => {
                 lightbox.classList.remove('active');
+                
+                // Wait for the fade-out, then clear the image
+                setTimeout(() => {
+                    lightboxImg.removeAttribute('src');
+                    lightboxImg.onload = null; // Clean up the listener so it doesn't double-fire later
+                }, 300);
             });
         });
     </script>
